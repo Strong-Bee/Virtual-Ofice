@@ -1,0 +1,2 @@
+import {describe,expect,it} from "vitest"; import {requiresApproval} from "./policy";
+describe("AI policy",()=>{it("always approves critical actions",()=>expect(requiresApproval("CRITICAL","HIGHLY_AUTONOMOUS")).toBe(true));it("uses approval for default autonomy",()=>expect(requiresApproval("LOW","EXECUTE_WITH_APPROVAL")).toBe(true));it("allows low risk suggestions",()=>expect(requiresApproval("LOW","SUGGEST")).toBe(false))});
