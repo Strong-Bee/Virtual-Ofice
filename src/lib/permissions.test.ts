@@ -1,0 +1,2 @@
+import {describe,expect,it} from "vitest"; import {hasWorkspaceRole} from "./permissions";
+describe("workspace roles",()=>{it("allows owners to perform admin actions",()=>expect(hasWorkspaceRole("OWNER","ADMIN")).toBe(true));it("blocks members from admin actions",()=>expect(hasWorkspaceRole("MEMBER","ADMIN")).toBe(false))});
