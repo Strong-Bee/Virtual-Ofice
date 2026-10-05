@@ -1,0 +1,1 @@
+Realtime boundary: dedicated WebSocket process owns authenticated connections, presence, movement, room state, chat and AI events. Redis handles ephemeral state, pub/sub and horizontal coordination. Movement frames are never persisted individually to PostgreSQL.
