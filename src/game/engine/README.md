@@ -1,0 +1,1 @@
+Phaser boundary: map rendering, avatars, collision, camera, interaction prompts and realtime movement stay outside React state. React owns dashboards, settings, forms and meeting UI.
