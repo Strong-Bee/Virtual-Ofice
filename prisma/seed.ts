@@ -1,0 +1,14 @@
+import {PrismaClient,WorkspaceRole,AIAutonomy} from "@prisma/client"; import bcrypt from "bcryptjs";
+const prisma=new PrismaClient();
+async function main(){const passwordHash=await bcrypt.hash("ChangeMe123!",12);
+const users=await Promise.all([["Andi","andi@virtual-office.local"],["Budi","budi@virtual-office.local"],["Siti","siti@virtual-office.local"]].map(([name,email])=>prisma.user.upsert({where:{email},update:{},create:{name,email,passwordHash}})));
+const workspace=await prisma.workspace.upsert({where:{slug:"demo-company"},update:{},create:{name:"Demo Company",slug:"demo-company"}});
+for(const user of users)await prisma.workspaceMember.upsert({where:{userId_workspaceId:{userId:user.id,workspaceId:workspace.id}},update:{},create:{userId:user.id,workspaceId:workspace.id,role:WorkspaceRole.OWNER}});
+const defs=[["Marketing","marketing",users[0]],["Engineering","engineering",users[1]],["Finance","finance",users[2]]] as const;
+for(const [name,slug,supervisor] of defs){const d=await prisma.department.upsert({where:{workspaceId_slug:{workspaceId:workspace.id,slug}},update:{},create:{workspaceId:workspace.id,name,slug}});await prisma.departmentSupervisor.upsert({where:{departmentId_userId:{departmentId:d.id,userId:supervisor.id}},update:{},create:{departmentId:d.id,userId:supervisor.id}})}
+const office=await prisma.office.upsert({where:{workspaceId_slug:{workspaceId:workspace.id,slug:"main"}},update:{},create:{workspaceId:workspace.id,name:"Main Office",slug:"main"}});
+for(const slug of ["lobby","open-workspace","meeting","focus","lounge"])await prisma.room.upsert({where:{officeId_slug:{officeId:office.id,slug}},update:{},create:{officeId:office.id,name:slug,slug}});
+const employees=[["Andi AI","Marketing Strategist","marketing",users[0]],["Sarah AI","Content Specialist","marketing",users[0]],["Alex AI","Sales Assistant","marketing",users[0]],["Codey","Software Engineer","engineering",users[1]],["Nova","QA Engineer","engineering",users[1]],["Fin","Finance Analyst","finance",users[2]]] as const;
+for(const [name,role,slug,supervisor] of employees){const d=await prisma.department.findUniqueOrThrow({where:{workspaceId_slug:{workspaceId:workspace.id,slug}}});await prisma.aIEmployee.create({data:{workspaceId:workspace.id,departmentId:d.id,supervisorId:supervisor.id,name,role,systemPrompt:"You are a governed AI employee. Follow company policy and request approval for sensitive actions.",modelProvider:"openai-compatible",modelName:"configured-later",autonomyLevel:AIAutonomy.EXECUTE_WITH_APPROVAL}})}
+console.log("Seeded",workspace.slug,office.slug)}
+main().finally(()=>prisma.$disconnect());
