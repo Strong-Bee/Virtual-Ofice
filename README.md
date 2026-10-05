@@ -25,6 +25,27 @@ Virtual Office turns a traditional company workspace into a programmable environ
 
 The long-term goal is not simply an AI chatbot. It is an **AI-native operating system for a company**.
 
+
+## 🎨 Product Visuals
+
+### Virtual office overview
+
+![Virtual Office overview](docs/assets/virtual-office-hero.svg)
+
+The office is designed as a persistent 2D workspace where humans and AI employees can move between departments, meeting rooms and shared spaces.
+
+### Human + AI characters
+
+![Human and AI employee characters](docs/assets/ai-human-characters.svg)
+
+Avatars represent people and AI employees with distinct roles, presence states and department identities.
+
+### Data-driven map
+
+![Virtual office map](docs/assets/virtual-office-map.svg)
+
+Maps are data-driven: rooms, furniture, collision boundaries, spawn points, portals and interactive objects can be edited without hardcoding the office UI.
+
 ---
 
 ## 🚀 Current status
